@@ -1,0 +1,93 @@
+﻿<Window x:Class="Lab7.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lab7"
+        mc:Ignorable="d"
+	Title="MainWindow" Height="450" Width="800">
+	<Window.Resources>
+		<DataTemplate x:Key="valueTemplate" >
+			<WrapPanel MaxWidth="150">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Шаг" Margin="4"/>
+					<TextBlock Text="{Binding H}" Margin="4"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="X" Margin="4"/>
+					<TextBlock Text="{Binding X}" Margin="4"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Y" Margin="4"/>
+					<TextBlock Text="{Binding Y}" Margin="4"/>
+				</StackPanel>
+			</WrapPanel>
+		</DataTemplate>
+	</Window.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<WrapPanel Grid.Row="0">
+			<StackPanel Orientation="Vertical" Margin="7.5">
+				<TextBlock Text="Точка 1"/>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="X = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=X0}" TextAlignment="Right"/>
+					<TextBlock Text="Y = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Y0}" TextAlignment="Right"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Orientation="Vertical" Margin="7.5">
+				<TextBlock Text="Точка 2"/>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="X = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=X1}" TextAlignment="Right"/>
+					<TextBlock Text="Y = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Y1}" TextAlignment="Right"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Orientation="Vertical" Margin="7.5">
+				<TextBlock Text="Точка 3"/>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="X = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=X2}" TextAlignment="Right"/>
+					<TextBlock Text="Y = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Y2}" TextAlignment="Right"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Orientation="Vertical" Margin="7.5">
+				<TextBlock Text="Точка 4"/>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="X = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=X3}" TextAlignment="Right"/>
+					<TextBlock Text="Y = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Y3}" TextAlignment="Right"/>
+				</StackPanel>
+			</StackPanel>
+		</WrapPanel>
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="150"/>
+			</Grid.ColumnDefinitions>
+			<Canvas x:Name="Canvas" SizeChanged="Canvas_SizeChanged">
+				<Polyline Points="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Points}" 
+						 StrokeThickness="2" 
+						 Stroke="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}"/>
+				</Canvas>
+			<ListBox Grid.Column="1" ItemTemplate="{StaticResource valueTemplate}"
+					 ItemsSource="{Binding Source={x:Static local:ViewModel.GetInstance}, 
+					 Path=Values}"/>
+		</Grid>
+	</Grid>
+</Window>
