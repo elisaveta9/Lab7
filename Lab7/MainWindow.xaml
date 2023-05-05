@@ -170,11 +170,11 @@
 			</StackPanel>
 			<StackPanel Orientation="Vertical" Margin="7.5">
 				<TextBlock Text="Цвет линии"/>
-				<cc:ColorPicker SelectedColor="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=SelectColorPicker}"/>
+				<cc:ColorPicker SelectedColor="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=SelectColorPicker}" HorizontalAlignment="Center"/>
 			</StackPanel>
 			<StackPanel Margin="7.5" Orientation="Horizontal">
-				<Button Content="Сохранить изменения кривой" Margin="2"/>
-				<Button Content="Отменить изменение кривой" Margin="2"/>
+				<Button Content="Сохранить изменения кривой" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=UpdatePolyline}"/>
+				<Button Content="Отменить изменение кривой" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=CancelUpdatePolyline}"/>
 			</StackPanel>
 		</WrapPanel>
 		<WrapPanel Grid.Row="2" Visibility="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=VisibilityCanvasValues, Converter={StaticResource visibilityConverter}}" Margin="5">
@@ -190,7 +190,7 @@
 			<TextBlock Text="Max Y = " Margin="2"/>
 			<TextBox PreviewTextInput="NumberValidationTextBox" 
 						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=CanvasMaxY}" TextAlignment="Right" Margin="2"/>
-			<Button Content="Вернуть автоматические настройки" Margin="2"/>
+			<Button Content="Вернуть автоматические настройки" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=SetAutoCanvasValues}"/>
 		</WrapPanel>
 		<Grid Grid.Row="3">
 			<Grid.ColumnDefinitions>
@@ -218,7 +218,7 @@
 					<RowDefinition Height="Auto"/>
 					<RowDefinition/>
 				</Grid.RowDefinitions>
-				<Button Content="Скрыть значения" Margin="2"/>
+				<Button Content="Скрыть значения" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=HideValuesSelectedLine}"/>
 				<ListBox Grid.Row="1" ItemTemplate="{StaticResource valueTemplate}"
 					 ItemsSource="{Binding Source={x:Static local:ViewModel.GetInstance}, 
 					 Path=Values, Mode=OneWay}"/>
@@ -229,9 +229,9 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 				<StackPanel>
-					<Button Content="Показать значения" Margin="2"/>
-					<Button Content="Изменить линию" Margin="2"/>
-					<Button Content="Удалить линию" Margin="2"/>
+					<Button Content="Показать значения" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=ShowValuesSelectedLine}"/>
+					<Button Content="Изменить линию" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=ShowUpdatePolyline}"/>
+					<Button Content="Удалить линию" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=DeletePolyline}"/>
 				</StackPanel>
 				<ListBox Grid.Row="1" ItemTemplate="{StaticResource polylineTemplate}"
 					ItemsSource="{Binding Source={x:Static local:ViewModel.GetInstance}, 

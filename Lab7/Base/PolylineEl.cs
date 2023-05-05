@@ -17,20 +17,20 @@ namespace Lab7
         private ColorPicker _color = new();
 
         public int Id => _id;
-        public double X0 { set { _p0.X = value; OnPropertyChanged(); P0 = ""; } }
-        public double X1 { set { _p1.X = value; OnPropertyChanged(); P1 = ""; } }
-        public double X2 { set { _p2.X = value; OnPropertyChanged(); P2 = ""; } }
-        public double X3 { set { _p3.X = value; OnPropertyChanged(); P3 = ""; } }
-        public double Y0 { set { _p0.Y = value; OnPropertyChanged(); P0 = ""; } }
-        public double Y1 { set { _p1.Y = value; OnPropertyChanged(); P1 = ""; } }
-        public double Y2 { set { _p2.Y = value; OnPropertyChanged(); P2 = ""; } }
-        public double Y3 { set { _p3.Y = value; OnPropertyChanged(); P3 = ""; } }
+        public double X0 { get => _p0.X; set { _p0.X = value; OnPropertyChanged(); P0 = ""; } }
+        public double X1 { get => _p1.X; set { _p1.X = value; OnPropertyChanged(); P1 = ""; } }
+        public double X2 { get => _p2.X; set { _p2.X = value; OnPropertyChanged(); P2 = ""; } }
+        public double X3 { get => _p3.X; set { _p3.X = value; OnPropertyChanged(); P3 = ""; } }
+        public double Y0 { get => _p0.Y; set { _p0.Y = value; OnPropertyChanged(); P0 = ""; } }
+        public double Y1 { get => _p1.Y; set { _p1.Y = value; OnPropertyChanged(); P1 = ""; } }
+        public double Y2 { get => _p2.Y; set { _p2.Y = value; OnPropertyChanged(); P2 = ""; } }
+        public double Y3 { get => _p3.Y; set { _p3.Y = value; OnPropertyChanged(); P3 = ""; } }
         public string P0 { get => $"X = {_p0.X}, Y = {_p0.Y}"; set => OnPropertyChanged(); }
         public string P1 { get => $"X = {_p1.X}, Y = {_p1.Y}"; set => OnPropertyChanged(); }
         public string P2 { get => $"X = {_p2.X}, Y = {_p2.Y}"; set => OnPropertyChanged(); }
         public string P3 { get => $"X = {_p3.X}, Y = {_p3.Y}"; set => OnPropertyChanged(); }
         public ColorPicker Color { get => _color; set { ColorBrush = value.SelectedColor; OnPropertyChanged(); } }
-        public Brush ColorBrush { get => Color.SelectedColor; set { Color.SelectedColor = value; OnPropertyChanged(); } }
+        public Brush ColorBrush { get => (SolidColorBrush)Color.SelectedColor; set { Color.SelectedColor = value; OnPropertyChanged(); } }
         public double StrokeThickness { get => _strokeThickness; set { _strokeThickness = value; OnPropertyChanged(); } }
         public PointCollection Points { get => _points; set { _points = value; OnPropertyChanged(); } }
         public ObservableCollection<PointValue> Values { get => _values; set { _values = value; OnPropertyChanged(); } }

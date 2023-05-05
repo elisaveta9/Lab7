@@ -148,10 +148,10 @@ namespace Lab7
                 }
             }
         }
-        public string CanvasMinX { get => $"{model.CanvasValues.MinX}"; set { model.CanvasValues.MinX = double.Parse(value); OnPropertyChanged(); UpdatePoints(); } }
-        public string CanvasMinY { get => $"{model.CanvasValues.MinY}"; set { model.CanvasValues.MinY = double.Parse(value); OnPropertyChanged(); UpdatePoints(); } }
-        public string CanvasMaxX { get => $"{model.CanvasValues.MaxX}"; set { model.CanvasValues.MaxX = double.Parse(value); OnPropertyChanged(); UpdatePoints(); } }
-        public string CanvasMaxY { get => $"{model.CanvasValues.MaxY}"; set { model.CanvasValues.MaxY = double.Parse(value); OnPropertyChanged(); UpdatePoints(); } }
+        public string CanvasMinX { get => $"{model.CanvasValues.MinX}"; set { model.CanvasValues.MinX = double.Parse(value); OnPropertyChanged(); model.UseCustomCanvasValues = true; UpdatePoints(); } }
+        public string CanvasMinY { get => $"{model.CanvasValues.MinY}"; set { model.CanvasValues.MinY = double.Parse(value); OnPropertyChanged(); model.UseCustomCanvasValues = true; UpdatePoints(); } }
+        public string CanvasMaxX { get => $"{model.CanvasValues.MaxX}"; set { model.CanvasValues.MaxX = double.Parse(value); OnPropertyChanged(); model.UseCustomCanvasValues = true; UpdatePoints(); } }
+        public string CanvasMaxY { get => $"{model.CanvasValues.MaxY}"; set { model.CanvasValues.MaxY = double.Parse(value); OnPropertyChanged(); model.UseCustomCanvasValues = true; UpdatePoints(); } }
         public double MaxX { set { model.SizeX = value - 10; OnPropertyChanged(); UpdatePoints(); } }
         public double MaxY { set { model.SizeY = value - 10; OnPropertyChanged(); UpdatePoints(); } }
         public ObservableCollection<PolylineEl> Polylines { get => model.Polylines; private set { model.Polylines = value; OnPropertyChanged(); } }
@@ -194,7 +194,7 @@ namespace Lab7
             }
         }
         public Brush SelectColorPicker { get => selectColorPicker; set { selectColorPicker = value; OnPropertyChanged(); } }
-        public PolylineEl SelectElement { get => selectElement; set { selectElement = value; OnPropertyChanged(); } }
+        public PolylineEl SelectElement { get => selectElement; set { selectElement = value; OnPropertyChanged(); VisibilityPolylineValues = false; } }
 
         public void CreateNewPolyline()
         {
@@ -205,7 +205,7 @@ namespace Lab7
 
         public void UpdateCurve()
         {
-            Values = model.GenerateCurve(_initialValues);
+            Values = model.GenerateCurve((CanvasValues)_initialValues.Clone());
             SetCanvasAutoValues();
             UpdatePoints();
         }
@@ -224,6 +224,7 @@ namespace Lab7
                 CanvasMinY = $"{model.CanvasAutoValues.MinY}";
                 CanvasMaxX = $"{model.CanvasAutoValues.MaxX}";
                 CanvasMaxY = $"{model.CanvasAutoValues.MaxY}";
+                model.UseCustomCanvasValues = false;
             }
         }
 
@@ -243,13 +244,22 @@ namespace Lab7
         private RelayCommand _showPolylineCollection;
         public RelayCommand ShowPolylineCollection => _showPolylineCollection ??= new RelayCommand(obj =>
         {
-            VisibilityPolylineCollection = true;
+            VisibilityPolylineCollection = !VisibilityPolylineCollection;
+            if (!VisibilityPolylineCollection)
+                VisibilityPolylineValues = !VisibilityPolylineValues;
         });
 
         private RelayCommand _showCanvasValues;
         public RelayCommand ShowCanvasValues => _showCanvasValues ??= new RelayCommand(obj =>
         {
-            VisibilityCanvasValues = true;
+            VisibilityCanvasValues = !VisibilityCanvasValues;
+        });
+
+        private RelayCommand _setAutoCanvasValues;
+        public RelayCommand SetAutoCanvasValues => _setAutoCanvasValues ??= new RelayCommand(obj =>
+        {
+            model.UseCustomCanvasValues = false;
+            SetCanvasAutoValues();
         });
 
         private RelayCommand _addNewPolylineCmd;
@@ -265,10 +275,88 @@ namespace Lab7
         public RelayCommand CancelAddNewPolyline => _cancelAddNewPolyline ??= new RelayCommand(obj =>
         {
             var item = Polylines.Where(x => x.Id == SelectItemId).First();
+            model.CanvasAutoValues = (CanvasValues)_initialValues.Clone();
+            SetCanvasAutoValues();
             Polylines.Remove(item);
             _addNewPolyline = false;
             VisibilityAddPolyline = false;
             VisibilityMenu = true;
+        });
+
+        private RelayCommand _showValuesSelectedLine;
+        public RelayCommand ShowValuesSelectedLine => _showValuesSelectedLine ??= new RelayCommand(obj =>
+        {
+            if (SelectElement != null)
+            {
+                SelectItemId = SelectElement.Id;
+                OnPropertyChanged("Values");
+                VisibilityPolylineValues = true;
+            }
+        });
+
+        private RelayCommand _hideValuesSelectedLine;
+        public RelayCommand HideValuesSelectedLine => _hideValuesSelectedLine ??= new RelayCommand(obj =>
+        {
+            VisibilityPolylineValues = false;
+        });
+
+        private RelayCommand _showUpdatePolyline;
+        public RelayCommand ShowUpdatePolyline => _showUpdatePolyline ??= new RelayCommand(obj =>
+        {
+            if (SelectElement != null)
+            {
+                VisibilityPolylineValues = false;
+                VisibilityPolylineCollection = false;
+                VisibilityMenu = false;
+                VisibilityUpdatePolyline = true;
+                X0 = $"{SelectElement.X0}"; X1 = $"{SelectElement.X1}";
+                X2 = $"{SelectElement.X2}"; X3 = $"{SelectElement.X3}";
+                Y0 = $"{SelectElement.Y0}"; Y1 = $"{SelectElement.Y1}";
+                Y2 = $"{SelectElement.Y2}"; Y3 = $"{SelectElement.Y3}";
+                SelectColorPicker = SelectElement.ColorBrush;
+                StrokeThickness = $"{SelectElement.StrokeThickness}";
+            }
+        });
+
+        private void SetColor()
+        {
+
+        }
+
+        private RelayCommand _deletePolyline;
+        public RelayCommand DeletePolyline => _deletePolyline ??= new RelayCommand(obj =>
+        {
+            Polylines.Remove(SelectElement);
+            model.CanvasAutoValues = model.RefreshCanvasValues();
+            if (!model.UseCustomCanvasValues)
+                SetCanvasAutoValues();
+            UpdatePoints();
+        });
+
+        private RelayCommand _updatePolyline;
+        public RelayCommand UpdatePolyline => _updatePolyline ??= new RelayCommand(obj =>
+        {
+            SelectElement.X0 = double.Parse(X0); SelectElement.X1 = double.Parse(X1);
+            SelectElement.X2 = double.Parse(X2); SelectElement.X3 = double.Parse(X3);
+            SelectElement.Y0 = double.Parse(Y0); SelectElement.Y1 = double.Parse(Y1);
+            SelectElement.Y2 = double.Parse(Y2); SelectElement.Y3 = double.Parse(Y3);
+            SelectElement.Values = model.GenerateCurve((CanvasValues)model.CanvasAutoValues.Clone());
+            model.CanvasAutoValues = model.RefreshCanvasValues();
+            SetCanvasAutoValues();
+            UpdatePoints();
+            SelectElement.StrokeThickness = double.Parse(StrokeThickness);
+            SelectElement.ColorBrush = SelectColorPicker;
+            VisibilityPolylineCollection = true;
+            VisibilityMenu = true;
+            VisibilityUpdatePolyline = false;
+        });
+
+        private RelayCommand _cancelUpdatePolyline;
+        public RelayCommand CancelUpdatePolyline => _cancelUpdatePolyline ??= new RelayCommand(obj =>
+        {
+            VisibilityPolylineCollection = true;
+            VisibilityMenu = true;
+            VisibilityUpdatePolyline = false;
         });
 
         public event PropertyChangedEventHandler? PropertyChanged;
