@@ -2,7 +2,7 @@
 {
     internal class PointValue
     {
-        private double _x, _y, _h;
+        private readonly double _x, _y, _h;
 
         public double X => _x;
         public double Y => _y;

@@ -13,8 +13,8 @@ namespace Lab7
         ViewModel ViewModel { get; set; }
         public MainWindow()
         {
-            InitializeComponent();
             ViewModel = ViewModel.GetInstance;
+            InitializeComponent();
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -25,7 +25,7 @@ namespace Lab7
 
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Canvas canvas = sender as Canvas;
+            ItemsControl canvas = sender as ItemsControl;
             ViewModel.MaxY = canvas.ActualHeight;
             ViewModel.MaxX = canvas.ActualWidth;
         }

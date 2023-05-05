@@ -4,11 +4,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab7"
+		xmlns:cc="clr-namespace:Lab7.CustomControls"
+		xmlns:cvrt="clr-namespace:Lab7.Common.Converters"
         mc:Ignorable="d"
 	Title="MainWindow" Height="450" Width="800">
 	<Window.Resources>
 		<DataTemplate x:Key="valueTemplate" >
-			<WrapPanel MaxWidth="150">
+			<WrapPanel>
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Text="Шаг" Margin="4"/>
 					<TextBlock Text="{Binding H}" Margin="4"/>
@@ -23,13 +25,50 @@
 				</StackPanel>
 			</WrapPanel>
 		</DataTemplate>
+		<DataTemplate x:Key="polylineTemplate">
+			<StackPanel Orientation="Vertical">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Точка 1" Margin="4"/>
+					<TextBlock Text="{Binding P0}" Margin="4"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Точка 2" Margin="4"/>
+					<TextBlock Text="{Binding P1}" Margin="4"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Точка 3" Margin="4"/>
+					<TextBlock Text="{Binding P2}" Margin="4"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Точка 4" Margin="4"/>
+					<TextBlock Text="{Binding P3}" Margin="4"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock x:Name="TextColor" Text="Цвет" Margin="4"/>
+					<Border Height="15.96" Width="15.96" Margin="4" BorderBrush="Silver" BorderThickness="1"
+                    Background="{Binding ColorBrush}"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Толщина линии" Margin="4"/>
+					<TextBlock Text="{Binding StrokeThickness}" Margin="4"/>
+				</StackPanel>
+			</StackPanel>
+		</DataTemplate>
+		<cvrt:VisibilityConverter x:Key="visibilityConverter"/>
 	</Window.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
-		<WrapPanel Grid.Row="0">
+		<WrapPanel Visibility="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=VisibilityMenu, Converter={StaticResource visibilityConverter}}">
+			<Button Content="Добавить кривую" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=AddNewPolylineVisibility}"/>
+			<Button Content="Показать коллекцию кивых" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=ShowPolylineCollection}"/>
+			<Button Content="Настроить/показать параметры холста" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=ShowCanvasValues}"/>
+		</WrapPanel>
+		<WrapPanel Grid.Row="1" Visibility="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=VisibilityAddPolyline, Converter={StaticResource visibilityConverter}}">
 			<StackPanel Orientation="Vertical" Margin="7.5">
 				<TextBlock Text="Точка 1"/>
 				<StackPanel Orientation="Horizontal">
@@ -74,20 +113,131 @@
 						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Y3}" TextAlignment="Right"/>
 				</StackPanel>
 			</StackPanel>
+			<StackPanel Margin="7.5" Orientation="Horizontal">
+				<Button Content="Добавить кривую" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=AddNewPolyline}"/>
+				<Button Content="Отменить добавление кривой" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=CancelAddNewPolyline}"/>
+			</StackPanel>
 		</WrapPanel>
-		<Grid Grid.Row="1">
+		<WrapPanel Grid.Row="1" Visibility="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=VisibilityUpdatePolyline, Converter={StaticResource visibilityConverter}}">
+			<StackPanel Orientation="Vertical" Margin="7.5">
+				<TextBlock Text="Точка 1"/>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="X = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=X0}" TextAlignment="Right"/>
+					<TextBlock Text="Y = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Y0}" TextAlignment="Right"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Orientation="Vertical" Margin="7.5">
+				<TextBlock Text="Точка 2"/>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="X = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=X1}" TextAlignment="Right"/>
+					<TextBlock Text="Y = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Y1}" TextAlignment="Right"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Orientation="Vertical" Margin="7.5">
+				<TextBlock Text="Точка 3"/>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="X = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=X2}" TextAlignment="Right"/>
+					<TextBlock Text="Y = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Y2}" TextAlignment="Right"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Orientation="Vertical" Margin="7.5">
+				<TextBlock Text="Точка 4"/>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="X = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=X3}" TextAlignment="Right"/>
+					<TextBlock Text="Y = " Margin="2"/>
+					<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Y3}" TextAlignment="Right"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Orientation="Vertical" Margin="7.5">
+				<TextBlock Text="Толщина линии"/>
+				<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=StrokeThickness}" TextAlignment="Right"/>
+			</StackPanel>
+			<StackPanel Orientation="Vertical" Margin="7.5">
+				<TextBlock Text="Цвет линии"/>
+				<cc:ColorPicker SelectedColor="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=SelectColorPicker}"/>
+			</StackPanel>
+			<StackPanel Margin="7.5" Orientation="Horizontal">
+				<Button Content="Сохранить изменения кривой" Margin="2"/>
+				<Button Content="Отменить изменение кривой" Margin="2"/>
+			</StackPanel>
+		</WrapPanel>
+		<WrapPanel Grid.Row="2" Visibility="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=VisibilityCanvasValues, Converter={StaticResource visibilityConverter}}" Margin="5">
+			<TextBlock Text="Min X = " Margin="2"/>
+			<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=CanvasMinX}" TextAlignment="Right" Margin="2"/>
+			<TextBlock Text="Min Y = " Margin="2"/>
+			<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=CanvasMinY}" TextAlignment="Right" Margin="2"/>
+			<TextBlock Text="Max X = " Margin="2"/>
+			<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=CanvasMaxX}" TextAlignment="Right" Margin="2"/>
+			<TextBlock Text="Max Y = " Margin="2"/>
+			<TextBox PreviewTextInput="NumberValidationTextBox" 
+						Width="45" Text="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=CanvasMaxY}" TextAlignment="Right" Margin="2"/>
+			<Button Content="Вернуть автоматические настройки" Margin="2"/>
+		</WrapPanel>
+		<Grid Grid.Row="3">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="150"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
-			<Canvas x:Name="Canvas" SizeChanged="Canvas_SizeChanged">
-				<Polyline Points="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Points}" 
-						 StrokeThickness="2" 
-						 Stroke="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}"/>
-				</Canvas>
-			<ListBox Grid.Column="1" ItemTemplate="{StaticResource valueTemplate}"
+			<ItemsControl Grid.Column="0" ItemsSource="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Polylines}"
+						  SizeChanged="Canvas_SizeChanged">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<Canvas/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Polyline Points="{Binding Points}" 
+								  StrokeThickness="{Binding StrokeThickness}" 
+								  Stroke="{Binding ColorBrush}"/>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+			<Grid Grid.Column="1" Visibility="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=VisibilityPolylineValues, Converter={StaticResource visibilityConverter}}">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<Button Content="Скрыть значения" Margin="2"/>
+				<ListBox Grid.Row="1" ItemTemplate="{StaticResource valueTemplate}"
 					 ItemsSource="{Binding Source={x:Static local:ViewModel.GetInstance}, 
-					 Path=Values}"/>
+					 Path=Values, Mode=OneWay}"/>
+			</Grid>
+			<Grid Grid.Column="2" Visibility="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=VisibilityPolylineCollection, Converter={StaticResource visibilityConverter}}">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<StackPanel>
+					<Button Content="Показать значения" Margin="2"/>
+					<Button Content="Изменить линию" Margin="2"/>
+					<Button Content="Удалить линию" Margin="2"/>
+				</StackPanel>
+				<ListBox Grid.Row="1" ItemTemplate="{StaticResource polylineTemplate}"
+					ItemsSource="{Binding Source={x:Static local:ViewModel.GetInstance}, 
+					Path=Polylines, Mode=OneWay}" 
+					SelectedItem="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=SelectElement}"/>
+			</Grid>
 		</Grid>
 	</Grid>
 </Window>
