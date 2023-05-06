@@ -1,6 +1,5 @@
 ﻿using Lab7.Base;
 using Lab7.Common;
-using Lab7.CustomControls;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -21,7 +20,8 @@ namespace Lab7
             , _addNewPolyline = false;
         private double _strokeThickness = 0;
         private CanvasValues _initialValues;
-        private Brush selectColorPicker = Brushes.Black;
+        private SolidColorBrush selectBrush = Brushes.Black;
+        private Color selectColor = Brushes.Black.Color;
         private PolylineEl selectElement;
 
         private ViewModel() => model = new();
@@ -193,7 +193,8 @@ namespace Lab7
                 }
             }
         }
-        public Brush SelectColorPicker { get => selectColorPicker; set { selectColorPicker = value; OnPropertyChanged(); } }
+        public SolidColorBrush SelectBrush { get => selectBrush; set { selectBrush = value; OnPropertyChanged(); } }
+        public Color SelectColor { get => selectColor; set { selectColor = value; OnPropertyChanged(); } }
         public PolylineEl SelectElement { get => selectElement; set { selectElement = value; OnPropertyChanged(); VisibilityPolylineValues = false; } }
 
         public void CreateNewPolyline()
@@ -265,7 +266,7 @@ namespace Lab7
         private RelayCommand _addNewPolylineCmd;
         public RelayCommand AddNewPolyline => _addNewPolylineCmd ??= new RelayCommand(obj =>
         {
-            Polylines.Where(x => x.Id == SelectItemId).First().ColorBrush = Brushes.Black;
+            Polylines.Where(x => x.Id == SelectItemId).First().Color = Brushes.Black;
             _addNewPolyline = false;
             VisibilityAddPolyline = false;
             VisibilityMenu = true;
@@ -313,7 +314,8 @@ namespace Lab7
                 X2 = $"{SelectElement.X2}"; X3 = $"{SelectElement.X3}";
                 Y0 = $"{SelectElement.Y0}"; Y1 = $"{SelectElement.Y1}";
                 Y2 = $"{SelectElement.Y2}"; Y3 = $"{SelectElement.Y3}";
-                SelectColorPicker = SelectElement.ColorBrush;
+                SelectBrush = SelectElement.Color;
+                SelectColor = SelectBrush.Color;
                 StrokeThickness = $"{SelectElement.StrokeThickness}";
             }
         });
@@ -345,7 +347,7 @@ namespace Lab7
             SetCanvasAutoValues();
             UpdatePoints();
             SelectElement.StrokeThickness = double.Parse(StrokeThickness);
-            SelectElement.ColorBrush = SelectColorPicker;
+            SelectElement.Color = new SolidColorBrush(SelectColor);
             VisibilityPolylineCollection = true;
             VisibilityMenu = true;
             VisibilityUpdatePolyline = false;

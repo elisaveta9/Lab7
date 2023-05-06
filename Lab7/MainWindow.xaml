@@ -1,10 +1,9 @@
-﻿<Window x:Class="Lab7.MainWindow"
+﻿<Window xmlns:c1="http://schemas.componentone.com/winfx/2006/xaml"  x:Class="Lab7.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab7"
-		xmlns:cc="clr-namespace:Lab7.CustomControls"
 		xmlns:cvrt="clr-namespace:Lab7.Common.Converters"
         mc:Ignorable="d"
 	Title="MainWindow" Height="450" Width="800">
@@ -46,7 +45,7 @@
 				<StackPanel Orientation="Horizontal">
 					<TextBlock x:Name="TextColor" Text="Цвет" Margin="4"/>
 					<Border Height="15.96" Width="15.96" Margin="4" BorderBrush="Silver" BorderThickness="1"
-                    Background="{Binding ColorBrush}"/>
+                    Background="{Binding Color}"/>
 				</StackPanel>
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Text="Толщина линии" Margin="4"/>
@@ -63,7 +62,7 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
-		<WrapPanel Visibility="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=VisibilityMenu, Converter={StaticResource visibilityConverter}}">
+		<WrapPanel Grid.Row="0" Visibility="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=VisibilityMenu, Converter={StaticResource visibilityConverter}}">
 			<Button Content="Добавить кривую" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=AddNewPolylineVisibility}"/>
 			<Button Content="Показать коллекцию кивых" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=ShowPolylineCollection}"/>
 			<Button Content="Настроить/показать параметры холста" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=ShowCanvasValues}"/>
@@ -170,7 +169,7 @@
 			</StackPanel>
 			<StackPanel Orientation="Vertical" Margin="7.5">
 				<TextBlock Text="Цвет линии"/>
-				<cc:ColorPicker SelectedColor="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=SelectColorPicker}" HorizontalAlignment="Center"/>
+				<c1:C1ColorPicker SelectedColor="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=SelectColor}"/>
 			</StackPanel>
 			<StackPanel Margin="7.5" Orientation="Horizontal">
 				<Button Content="Сохранить изменения кривой" Margin="2" Command="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=UpdatePolyline}"/>
@@ -209,7 +208,7 @@
 					<DataTemplate>
 						<Polyline Points="{Binding Points}" 
 								  StrokeThickness="{Binding StrokeThickness}" 
-								  Stroke="{Binding ColorBrush}"/>
+								  Stroke="{Binding Color}"/>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>

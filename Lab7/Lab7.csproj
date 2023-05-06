@@ -8,15 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="fill.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="OxyPlot.Wpf" Version="2.1.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="fill.png" />
+    <PackageReference Include="C1.WPF.ColorPicker" Version="6.0.20231.514" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
-﻿using Lab7.CustomControls;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -14,7 +13,7 @@ namespace Lab7
         private Point _p0, _p1, _p2, _p3;
         private PointCollection _points;
         private ObservableCollection<PointValue> _values;
-        private ColorPicker _color = new();
+        private SolidColorBrush _color;
 
         public int Id => _id;
         public double X0 { get => _p0.X; set { _p0.X = value; OnPropertyChanged(); P0 = ""; } }
@@ -29,8 +28,7 @@ namespace Lab7
         public string P1 { get => $"X = {_p1.X}, Y = {_p1.Y}"; set => OnPropertyChanged(); }
         public string P2 { get => $"X = {_p2.X}, Y = {_p2.Y}"; set => OnPropertyChanged(); }
         public string P3 { get => $"X = {_p3.X}, Y = {_p3.Y}"; set => OnPropertyChanged(); }
-        public ColorPicker Color { get => _color; set { ColorBrush = value.SelectedColor; OnPropertyChanged(); } }
-        public Brush ColorBrush { get => (SolidColorBrush)Color.SelectedColor; set { Color.SelectedColor = value; OnPropertyChanged(); } }
+        public SolidColorBrush Color { get => _color; set { _color = value; OnPropertyChanged(); } }
         public double StrokeThickness { get => _strokeThickness; set { _strokeThickness = value; OnPropertyChanged(); } }
         public PointCollection Points { get => _points; set { _points = value; OnPropertyChanged(); } }
         public ObservableCollection<PointValue> Values { get => _values; set { _values = value; OnPropertyChanged(); } }
@@ -45,13 +43,13 @@ namespace Lab7
             _p3 = p3;
             _points = points;
             _values = values;
-            _color.SelectedColor = Brushes.Red;
+            _color = Brushes.Red;
             _strokeThickness = 2;
         }
 
         public PolylineEl(int id, Point p0, Point p1, Point p2, Point p3
             , PointCollection points, ObservableCollection<PointValue> values
-            , Brush color, double strokeThickness)
+            , SolidColorBrush color, double strokeThickness)
         {
             _id = id;
             _p0 = p0;
@@ -60,7 +58,7 @@ namespace Lab7
             _p3 = p3;
             _points = points;
             _values = values;
-            _color.SelectedColor = color;
+            _color = color;
             _strokeThickness = strokeThickness;
         }
 
