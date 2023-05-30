@@ -207,10 +207,10 @@ namespace Lab7
             model.CanvasAutoValues = (CanvasValues)initialValues.Clone();
             for (double t = 0.0; t <= 1.0; t = Math.Round(t + 0.005, 3))
             {
-                double x = Math.Pow(1 - t, 3) * model.X0 + 3 * t * Math.Pow(1 - t, 2) * model.X1 +
-                    3 * Math.Pow(t, 2) * (1 - t) * model.X2 + Math.Pow(t, 3) * model.X3;
-                double y = Math.Pow(1 - t, 3) * model.Y0 + 3 * t * Math.Pow(1 - t, 2) * model.Y1 +
-                    3 * Math.Pow(t, 2) * (1 - t) * model.Y2 + Math.Pow(t, 3) * model.Y3;
+                double x = Math.Round(Math.Pow(1 - t, 3) * model.X0 + 3 * t * Math.Pow(1 - t, 2) * model.X1 +
+                    3 * Math.Pow(t, 2) * (1 - t) * model.X2 + Math.Pow(t, 3) * model.X3, 5);
+                double y = Math.Round(Math.Pow(1 - t, 3) * model.Y0 + 3 * t * Math.Pow(1 - t, 2) * model.Y1 +
+                    3 * Math.Pow(t, 2) * (1 - t) * model.Y2 + Math.Pow(t, 3) * model.Y3, 5);
                 if (x > model.CanvasAutoValues.MaxX) model.CanvasAutoValues.MaxX = x;
                 if (x < model.CanvasAutoValues.MinX) model.CanvasAutoValues.MinX = x;
                 if (y > model.CanvasAutoValues.MaxY) model.CanvasAutoValues.MaxY = y;
@@ -224,13 +224,7 @@ namespace Lab7
 
         public CanvasValues RefreshCanvasValues()
         {
-            CanvasValues canvas = new()
-            {
-                MaxY = -999999999999999999,
-                MinY = 999999999999999999,
-                MaxX = -999999999999999999,
-                MinX = 999999999999999999
-            };
+            CanvasValues canvas = new(999999999999999999, 999999999999999999, -999999999999999999, -999999999999999999);
             foreach (PolylineEl polyline in Polylines)
             {
                 foreach (PointValue point in polyline.Values)

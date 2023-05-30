@@ -38,11 +38,11 @@ namespace Lab7
 
         public double Y2 { get; set; } = 0;
 
-        public double Y3 { get; set; } = 0;      
+        public double Y3 { get; set; } = 0;
 
-        public CanvasValues CanvasValues { get; set; } = new(-999999999999999999, 999999999999999999, -999999999999999999, 999999999999999999);
+        public CanvasValues CanvasValues { get; set; } = new(999999999999999999, 999999999999999999, -999999999999999999, -999999999999999999);
 
-        public CanvasValues CanvasAutoValues { get; set; } = new(-999999999999999999, 999999999999999999, -999999999999999999, 999999999999999999);
+        public CanvasValues CanvasAutoValues { get; set; } = new(999999999999999999, 999999999999999999, -999999999999999999, -999999999999999999);
 
         public ObservableCollection<PolylineEl> Polylines { get; set; } = new();
 
