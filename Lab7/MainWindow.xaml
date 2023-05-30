@@ -54,6 +54,7 @@
 			</StackPanel>
 		</DataTemplate>
 		<cvrt:VisibilityConverter x:Key="visibilityConverter"/>
+		<cvrt:PointCollectionConverter x:Key="pointCollectionConverter"/>
 	</Window.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
@@ -198,7 +199,7 @@
 				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 			<ItemsControl Grid.Column="0" ItemsSource="{Binding Source={x:Static local:ViewModel.GetInstance}, Path=Polylines}"
-						  SizeChanged="Canvas_SizeChanged">
+						  x:Name="Canvas">
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
 						<Canvas/>
@@ -206,9 +207,17 @@
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<Polyline Points="{Binding Points}" 
-								  StrokeThickness="{Binding StrokeThickness}" 
-								  Stroke="{Binding Color}"/>
+						<Polyline StrokeThickness="{Binding StrokeThickness}" 
+								  Stroke="{Binding Color}">
+							<Polyline.Points>
+								<MultiBinding Converter="{StaticResource pointCollectionConverter}">
+									<Binding ElementName="Canvas" Path="ActualWidth"/>
+									<Binding ElementName="Canvas" Path="ActualHeight"/>
+									<Binding Source="{x:Static local:ViewModel.GetInstance}" Path="CanvasValues"/>
+									<Binding Path="Values"/>
+								</MultiBinding>
+							</Polyline.Points>
+						</Polyline>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>

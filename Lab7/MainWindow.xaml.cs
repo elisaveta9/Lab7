@@ -22,12 +22,5 @@ namespace Lab7
             Regex regex = new("[^0-9]+-,");
             e.Handled = regex.IsMatch(e.Text);
         }
-
-        private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            ItemsControl canvas = sender as ItemsControl;
-            ViewModel.MaxY = canvas.ActualHeight;
-            ViewModel.MaxX = canvas.ActualWidth;
-        }
     }
 }
