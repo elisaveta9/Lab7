@@ -201,9 +201,9 @@ namespace Lab7
             Polylines.Add(polyline);
         }
 
-        public ObservableCollection<PointValue> GenerateCurve(CanvasValues initialValues)
+        public void GenerateCurve(CanvasValues initialValues)
         {
-            ObservableCollection<PointValue> values = new();
+            Values = new();
             model.CanvasAutoValues = (CanvasValues)initialValues.Clone();
             for (double t = 0.0; t <= 1.0; t = Math.Round(t + 0.005, 3))
             {
@@ -215,11 +215,10 @@ namespace Lab7
                 if (x < model.CanvasAutoValues.MinX) model.CanvasAutoValues.MinX = x;
                 if (y > model.CanvasAutoValues.MaxY) model.CanvasAutoValues.MaxY = y;
                 if (y < model.CanvasAutoValues.MinY) model.CanvasAutoValues.MinY = y;
-                values.Add(new PointValue(x, y, t));
+                Values.Add(new PointValue(x, y, t));
             }
             if (!model.UseCustomCanvasValues)
                 CanvasValues = model.CanvasAutoValues;
-            return values;
         }
 
         public CanvasValues RefreshCanvasValues()
@@ -240,7 +239,7 @@ namespace Lab7
 
         public void UpdateCurve()
         {
-            Values = GenerateCurve((CanvasValues)_initialValues.Clone());
+            GenerateCurve((CanvasValues)_initialValues.Clone());
             SetCanvasAutoValues();
         }
 
@@ -344,13 +343,9 @@ namespace Lab7
                 SelectBrush = SelectElement.Color;
                 SelectColor = SelectBrush.Color;
                 StrokeThickness = $"{SelectElement.StrokeThickness}";
+                SelectItemId = SelectElement.Id;
             }
         });
-
-        private void SetColor()
-        {
-
-        }
 
         private RelayCommand _deletePolyline;
         public RelayCommand DeletePolyline => _deletePolyline ??= new RelayCommand(obj =>
@@ -368,7 +363,7 @@ namespace Lab7
             SelectElement.X2 = double.Parse(X2); SelectElement.X3 = double.Parse(X3);
             SelectElement.Y0 = double.Parse(Y0); SelectElement.Y1 = double.Parse(Y1);
             SelectElement.Y2 = double.Parse(Y2); SelectElement.Y3 = double.Parse(Y3);
-            SelectElement.Values = GenerateCurve((CanvasValues)model.CanvasAutoValues.Clone());
+            GenerateCurve((CanvasValues)model.CanvasAutoValues.Clone());
             model.CanvasAutoValues = RefreshCanvasValues();
             SetCanvasAutoValues();
             SelectElement.StrokeThickness = double.Parse(StrokeThickness);
@@ -376,6 +371,7 @@ namespace Lab7
             VisibilityPolylineCollection = true;
             VisibilityMenu = true;
             VisibilityUpdatePolyline = false;
+            SelectItemId = Polylines.Last().Id;
         });
 
         private RelayCommand _cancelUpdatePolyline;
@@ -384,6 +380,7 @@ namespace Lab7
             VisibilityPolylineCollection = true;
             VisibilityMenu = true;
             VisibilityUpdatePolyline = false;
+            SelectItemId = Polylines.Last().Id;
         });
 
         public event PropertyChangedEventHandler? PropertyChanged;
